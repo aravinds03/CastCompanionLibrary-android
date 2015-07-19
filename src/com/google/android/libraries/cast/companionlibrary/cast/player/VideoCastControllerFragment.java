@@ -143,7 +143,7 @@ public class VideoCastControllerFragment extends Fragment implements
             String customDataStr = extras.getString(VideoCastManager.EXTRA_CUSTOM_DATA);
             int nextPreviousVisibilityPolicy = extras
                     .getInt(VideoCastManager.EXTRA_NEXT_PREVIOUS_VISIBILITY_POLICY,
-                            VideoCastController.NEXT_PREV_VISIBILITY_POLICY_DISABLED);
+                            VideoCastController.NEXT_PREV_VISIBILITY_POLICY_HIDDEN);
             mCastController.setNextPreviousVisibilityPolicy(nextPreviousVisibilityPolicy);
             JSONObject customData = null;
             if (!TextUtils.isEmpty(customDataStr)) {

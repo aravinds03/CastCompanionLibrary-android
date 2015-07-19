@@ -411,7 +411,7 @@ public class VideoCastManager extends BaseCastManager
      */
     public void startVideoCastControllerActivity(Context context, Bundle mediaWrapper, int position,
             boolean shouldStart, JSONObject customData) {
-        Intent intent = new Intent(context, VideoCastControllerActivity.class);
+        Intent intent = new Intent(context, mTargetActivity);
         intent.putExtra(EXTRA_MEDIA, mediaWrapper);
         intent.putExtra(EXTRA_START_POINT, position);
         intent.putExtra(EXTRA_SHOULD_START, shouldStart);
