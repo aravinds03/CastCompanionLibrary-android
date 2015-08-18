@@ -470,12 +470,6 @@ public class VideoCastControllerFragment extends Fragment implements
                             mCastController.closeActivity();
                         }
                         break;
-                    case MediaStatus.IDLE_REASON_INTERRUPTED:
-                        if (mMediaStatus.getLoadingItemId() == MediaQueueItem.INVALID_ITEM_ID) {
-                            // we have reached the end of queue
-                            mCastController.closeActivity();
-                        }
-                        break;
                     case MediaStatus.IDLE_REASON_CANCELED:
                         try {
                             if (mCastManager.isRemoteStreamLive()) {
@@ -528,7 +522,6 @@ public class VideoCastControllerFragment extends Fragment implements
             }
             mMediaStatus = mCastManager.getMediaStatus();
             mCastManager.addVideoCastConsumer(mCastConsumer);
-            mCastManager.incrementUiCounter();
             if (!mIsFresh) {
                 updatePlayerStatus();
                 // updating metadata in case another client has changed it and we are resuming the
@@ -539,6 +532,8 @@ public class VideoCastControllerFragment extends Fragment implements
             }
         } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
             LOGE(TAG, "Failed to get media information or status of media playback", e);
+        } finally {
+            mCastManager.incrementUiCounter();
         }
     }
 
