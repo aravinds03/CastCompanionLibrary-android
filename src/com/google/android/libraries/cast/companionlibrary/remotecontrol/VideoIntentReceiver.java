@@ -22,7 +22,8 @@ import static com.google.android.libraries.cast.companionlibrary.utils.LogUtils.
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.CastException;
 import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
-import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions
+        .TransientNetworkDisconnectionException;
 import com.google.android.libraries.cast.companionlibrary.notification.VideoCastNotificationService;
 import com.google.android.libraries.cast.companionlibrary.utils.LogUtils;
 
@@ -49,11 +50,10 @@ public class VideoIntentReceiver extends BroadcastReceiver {
         switch (action) {
             case VideoCastNotificationService.ACTION_TOGGLE_PLAYBACK:
                 try {
-                    LOGD(TAG, "Toggling playback via CastManager");
-                    castMgr.togglePlayback();
-                } catch (Exception e) {
-                    LOGE(TAG, "onReceive(): Failed to toggle playback", e);
-                    startService(context, VideoCastNotificationService.ACTION_TOGGLE_PLAYBACK);
+                    VideoCastManager.getInstance().togglePlayback();
+                } catch (CastException | TransientNetworkDisconnectionException |
+                        NoConnectionException e) {
+                    LOGE(TAG, "onReceive() Failed to toggle playback ");
                 }
                 break;
             case VideoCastNotificationService.ACTION_STOP:
@@ -61,6 +61,8 @@ public class VideoIntentReceiver extends BroadcastReceiver {
                 castMgr.disconnect();
                 break;
             case Intent.ACTION_MEDIA_BUTTON:
+                // this is used when we toggle playback from lockscreen in versions prior to
+                // Lollipop
                 if (!intent.hasExtra(Intent.EXTRA_KEY_EVENT)) {
                     return;
                 }
@@ -69,24 +71,15 @@ public class VideoIntentReceiver extends BroadcastReceiver {
                     return;
                 }
 
-                switch (keyEvent.getKeyCode()) {
-                    case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                        try {
-                            castMgr.togglePlayback();
-                        } catch (CastException | NoConnectionException |
-                                TransientNetworkDisconnectionException e) {
-                            LOGE(TAG, "Failed to toggle playback", e);
-                        }
-                        break;
+                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
+                    try {
+                        VideoCastManager.getInstance().togglePlayback();
+                    } catch (CastException | TransientNetworkDisconnectionException |
+                            NoConnectionException e) {
+                        LOGE(TAG, "onReceive() Failed to toggle playback ");
+                    }
                 }
                 break;
         }
     }
-
-    private void startService(Context context, String action) {
-        Intent serviceIntent = new Intent(action);
-        serviceIntent.setPackage(context.getPackageName());
-        context.startService(serviceIntent);
-    }
-
 }
