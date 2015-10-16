@@ -3,9 +3,9 @@
 CastCompanionLibrary-android is a library project to enable developers integrate Cast capabilities into their applications faster and easier.
 
 ## Dependencies
-* google-play-services_lib library from the Android SDK (at least version 7.5+)
-* android-support-v7-appcompat (version 21 or above)
-* android-support-v7-mediarouter (version 21 or above)
+* google-play-services_lib library from the Android SDK (at least version 7.8+)
+* android-support-v7-appcompat (version 22 or above)
+* android-support-v7-mediarouter (version 22 or above)
 
 ## Setup Instructions
 * Set up the project dependencies
@@ -29,6 +29,52 @@ See LICENSE
 Google Cast Developers Community on Google+ [http://goo.gl/TPLDxj](http://goo.gl/TPLDxj)
 
 ## Change List
+
+2.5.2
+ * Fixing issue #233
+
+2.5.1
+ * Fixed an issue where not setting the LaunchOptions would have resulted in receiver not loading. Now the
+   default behavior is to launch the app with the default value of relaunchIfRunning set to false.
+
+2.5
+ * MiniController component now has an attribute "auto_setup" that if set to "true", it instructs the
+   framework to fully configure the component, so that clients would only need to add the MiniController
+   to their layout and the rest will be handled by the library (i.e. if that attribute is set to true,
+   there is no need to register or unregister that component with the cast manger anymore). The default
+   value is "false" which falls back to the old behavior.
+ * You can now set the LaunchOptions soon after initializing the Cast Manager by calling VideoCastManager.setLaunchOptions()
+   (same with DataCastManager).
+ * A new callback (onDisconnectionReason(int reason)) has been added that can inform the registered listeners
+   of the reason a disconnect has happened. Understanding the reason behind a disconnect is somewhat non-trivial
+   so this will hopefully make that task easier; see the JavaDoc for more details.
+ * Now you can have the library automatically try to reconnect by enabling the FEATURE_AUTO_RECONNECT after
+   initializing the Cast Manager; this means clients don't need to call reconnectSessionIfPossible() if that
+   feature is enabled.
+ * Updated the documentation.
+ * Some cleanup, fixing some JavaDocs and comments, etc.
+
+2.4
+ * Fixed a number of bugs (#205, #204, #203)
+ * Prepared the library for Marshmallow permissions related to the Play Services
+ * Some code cleanup
+
+2.3.2
+ * Updated the icon for "queue list" in the library.
+
+2.3.1
+ * Updated gradle build to use the latest build tool and plugin version
+ * Fixed #198. This is a fix for a memory leak in the VideoCastControllerActivity so it is strongly recommended to apply this update.
+
+2.3
+
+ * Moved to use MediaSessionCompat and removed all references to RemoteControlClient (RCC) across the library.
+ In addition, started to use the MediaStyle added to the NotificationCompat in the v7 app compat support.
+ library.
+ * Updated Play Services version to use 7.8+
+ * Persisting the policy on showing the next/prev for the full screen controller so that it is always honored.
+ * Fixed a few issue around notification visibility when app is in background.
+ * These issues have been addressed: #196, #194, #178
 
 2.2
 
