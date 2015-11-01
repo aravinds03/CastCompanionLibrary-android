@@ -600,6 +600,9 @@ public class VideoCastControllerFragment extends Fragment implements
             return;
         }
         mUrlAndBitmap = null;
+        if (mImageAsyncTask != null) {
+            mImageAsyncTask.cancel(true);
+        }
         mImageAsyncTask = new FetchBitmapTask() {
             @Override
             protected void onPostExecute(Bitmap bitmap) {
@@ -607,7 +610,7 @@ public class VideoCastControllerFragment extends Fragment implements
                     mUrlAndBitmap = new UrlAndBitmap();
                     mUrlAndBitmap.mBitmap = bitmap;
                     mUrlAndBitmap.mUrl = uri;
-                    if (!mImageAsyncTask.isCancelled()) {
+                    if (!isCancelled()) {
                         mCastController.setImage(bitmap);
                     }
                 }
